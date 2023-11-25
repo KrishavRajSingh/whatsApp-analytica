@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["whatsappwebhook.suvidhaen.com", "127.0.0.1"]
 
-CSRF_TRUSTED_ORIGINS = ['https://whatsappwebhook.suvidhaen.com/']
+CSRF_TRUSTED_ORIGINS = ['https://whatsappwebhook.suvidhaen.com/', 'https://whatsappwebhook.suvidhaen.com']
 # Application definition
 
 INSTALLED_APPS = [

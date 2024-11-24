@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-z6#g#vj=-k%^laiecemou$v^^mz^#!yk-zs2gw_*removed"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["whatsappwebhook.suvidhaen.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["whatsappwebhook.suvidhaen.com", "127.0.0.1", "localhost"]
 
 CSRF_TRUSTED_ORIGINS = ['https://whatsappwebhook.suvidhaen.com/', 'https://whatsappwebhook.suvidhaen.com']
 # Application definition
@@ -77,8 +77,12 @@ WSGI_APPLICATION = "whatsappwebhook.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "postgres",
+        "USER": "krishav",
+        "PASSWORD": "secret",
+        "HOST": "localhost",
+        "PORT": "5432"
     }
 }
 

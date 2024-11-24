@@ -28,9 +28,64 @@
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Messages
+from .models import Messages, Whatsapp_Message
 from .serializer import ChatMessageSerializer
+from twilio.twiml.messaging_response import MessagingResponse
+from django.http import HttpResponse, HttpResponseForbidden
+import os
+from twilio.rest import Client
 
+account_sid = os.getenv('TWILIO_SID')
+auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+
+def _save_message(*args, **kwargs):
+       try:
+            Whatsapp_Message.objects.create(**kwargs)
+       except Exception as e:
+           print("Error saving message: ", e)
+#     print(kwargs)   
+
+@api_view(["POST"])
+def receive_whatsapp_message(request):
+    response  = MessagingResponse()
+    
+    print(request.data)
+    if request.data["AccountSid"] == account_sid:
+       _save_message(
+           message_id = request.data["MessageSid"],
+           profile_name = request.data["ProfileName"],
+           message_type = request.data["MessageType"],
+           _from = request.data["From"],
+           body = request.data["Body"],
+           to = request.data["To"]
+       )
+       
+       response.message("Message Received")
+       return HttpResponse(str(response))
+    
+    return HttpResponseForbidden("Invalid Request")
+
+@api_view(["POST"])
+def send_whatsapp_message(request):
+    try:
+        
+       client = Client(account_sid, auth_token)
+
+       message = client.messages.create(
+              from_='whatsapp:+14155238886',
+              body=request.data["body"],
+              to=f'whatsapp:+91{request.data["to"]}'
+       )
+       if message:
+              _save_message(
+              message_id = message.sid,
+              _from = message.from_,
+              body = message.body,
+              to = message.to
+              )
+       return HttpResponse("Message sent")
+    except Exception as e:
+         print("Error sending message: ", e)
 
 @api_view(["POST"])
 def postData(request):

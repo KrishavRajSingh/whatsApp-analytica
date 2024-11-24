@@ -31,6 +31,18 @@ class Messages(models.Model):
    mentionedIds = models.JSONField(blank=True)
    time = models.BigIntegerField(blank=True)
     
+class Whatsapp_Message(models.Model):
+    message_id =  models.CharField(max_length=100)
+    profile_name = models.CharField(max_length=100, default="Me")
+    message_type = models.CharField(max_length=30, default="text")
+    _from = models.CharField(max_length=50)
+    body = models.TextField()
+    to = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Message received from {self._from} to {self.to}"
+
 class PhoneNumber(models.Model):
     phone_number = models.CharField(max_length=50)
     timestamp = models.DateTimeField(auto_now_add=True)
